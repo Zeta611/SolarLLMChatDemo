@@ -65,6 +65,11 @@ def get_response(retrieved_docs):
     )
 
 
+summary_pat = re.compile(r".*Summary:\s*(.*)\s*Explanation:")
+explanation_pat = re.compile(r".*Explanation:\s*(.*)\s*Advice:")
+advice_pat = re.compile(r".*Advice:\s*(.*)\s*")
+
+
 def create_excel_grade(students_data):
     wb = Workbook()
     ws = wb.active
@@ -72,14 +77,18 @@ def create_excel_grade(students_data):
 
     ws["A1"] = "File Name"
     ws["B1"] = "Score"
-    ws["C1"] = "Feedback"
+    ws["C1"] = "Summary"
+    ws["D1"] = "Explanation"
+    ws["E1"] = "Advice"
 
     for row, (name, score, feedback) in enumerate(students_data, start=2):
         # Normalize the Korean name to composed form
         normalized_name = unicodedata.normalize("NFC", name)
         ws[f"A{row}"] = normalized_name
         ws[f"B{row}"] = score
-        ws[f"C{row}"] = feedback
+        ws[f"C{row}"] = summary_pat.search(feedback).group(1)
+        ws[f"D{row}"] = explanation_pat.search(feedback).group(1)
+        ws[f"E{row}"] = advice_pat.search(feedback).group(1)
 
     return wb
 
