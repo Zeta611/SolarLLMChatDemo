@@ -108,7 +108,7 @@ def process_pdf_file(file_path):
     file_name = os.path.basename(file_path)
     student_name_match = re.search(r"^(.*?)(?=\d)", file_name, re.UNICODE)
     student_name = (
-        student_name_match.group(1).strip() if student_name_match else "Unknown"
+        student_name_match.group(1).strip() if student_name_match else file_name
     )
 
     with st.chat_message("assistant"):
