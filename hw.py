@@ -86,9 +86,12 @@ def create_excel_grade(students_data):
         normalized_name = unicodedata.normalize("NFC", name)
         ws[f"A{row}"] = normalized_name
         ws[f"B{row}"] = score
-        ws[f"C{row}"] = summary_pat.search(feedback).group(1)
-        ws[f"D{row}"] = explanation_pat.search(feedback).group(1)
-        ws[f"E{row}"] = advice_pat.search(feedback).group(1)
+        if v := summary_pat.search(feedback):
+            ws[f"C{row}"] = v.group(1)
+        if v := explanation_pat.search(feedback):
+            ws[f"D{row}"] = v.group(1)
+        if v := advice_pat.search(feedback):
+            ws[f"E{row}"] = v.group(1)
 
     return wb
 
